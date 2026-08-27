@@ -1,0 +1,14 @@
+# Dependency directories (parent level)
+node_modules/
+
+# IDEs and AI tools configuration
+.agents/
+.claude/
+.cursor/
+.devin/
+.vscode/
+
+# Parent project configurations
+package.json
+package-lock.json
+prisma.config.ts
