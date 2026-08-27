@@ -1,5 +1,7 @@
 import { getTeamFromSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { Toaster } from "react-hot-toast";
+import TeamNotificationListener from "@/components/user/TeamNotificationListener";
 
 export default async function DashboardLayout({
   children,
@@ -12,5 +14,11 @@ export default async function DashboardLayout({
     redirect("/team-login");
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <Toaster position="top-center" />
+      <TeamNotificationListener />
+      {children}
+    </>
+  );
 }

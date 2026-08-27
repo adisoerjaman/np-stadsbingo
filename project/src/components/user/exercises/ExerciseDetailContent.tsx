@@ -96,16 +96,6 @@ export default function ExerciseDetailContent({
           if (data.submission?.answerImage) {
             setUploadedImage(data.submission.answerImage);
           }
-          if (data.status === "FEEDBACK") {
-            toast("Je hebt feedback ontvangen van de docent", {
-              icon: "✏️",
-              position: "top-center",
-            });
-          } else if (data.status === "APPROVED") {
-            toast.success("Je opdracht is goedgekeurd!", {
-              position: "top-center",
-            });
-          }
         }
       } catch {
         // stil falen; volgende poll probeert opnieuw
