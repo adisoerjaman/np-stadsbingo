@@ -1,131 +1,15 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-// Models
-
-model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  name         String
-  password     String?
-  role         Role     @default(USER)
-  isSuperAdmin Boolean  @default(false)
-  createdAt    DateTime @default(now())
-
-  teams Team[] @relation("TeacherTeams")
-}
-
-model TeamPlayer {
-  id            String @id @default(cuid())
-  name          String
-  studentNumber String
-  teamId        String
-  team          Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
-
-  captainOf Team? @relation("Captain")
-
-  submissions Submission[]
-}
-
-model Team {
-  id          String   @id @default(cuid())
-  name        String
-  code        String   @unique
-  createdAt   DateTime @default(now())
-  createdById String
-  createdBy   User     @relation("TeacherTeams", fields: [createdById], references: [id])
-
-  captainId String?     @unique
-  captain   TeamPlayer? @relation("Captain", fields: [captainId], references: [id])
-
-  players     TeamPlayer[]
-  submissions Submission[]
-
-  assignments TeamAssignment[]
-}
-
-model Assignment {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  location    String
-  latitude    Float?
-  longitude   Float?
-  order       Int
-  createdAt   DateTime @default(now())
-  exampleImage String?
-
-  submissions Submission[]
-
-  teams TeamAssignment[]
-}
-
-model TeamAssignment {
-  id           String   @id @default(cuid())
-  teamId       String
-  assignmentId String
-  order        Int      @default(0)
-  createdAt    DateTime @default(now())
-
-  team       Team       @relation(fields: [teamId], references: [id])
-  assignment Assignment @relation(fields: [assignmentId], references: [id])
-
-  @@unique([teamId, assignmentId])
-  @@index([teamId])
-  @@index([assignmentId])
-}
-
-model Submission {
-  id           String   @id @default(cuid())
-  teamId       String
-  assignmentId String
-  playerId     String?
-  answerText   String?
-  answerImage  String?
-  status       Status   @default(PENDING)
-  feedback     String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  team       Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  assignment Assignment  @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
-  player     TeamPlayer? @relation(fields: [playerId], references: [id], onDelete: SetNull)
-
-  @@unique([teamId, assignmentId])
-  @@index([status])
-}
-
-model AuditLog {
-  id         String   @id @default(cuid())
-  action     String // bv. SUBMISSION_APPROVED, SUBMISSION_FEEDBACK, TEAM_CREATED
-  actorId    String? // id van de admin die de actie deed
-  actorName  String?
-  targetType String // bv. Submission, Team, Assignment
-  targetId   String
-  detail     String?
-  createdAt  DateTime @default(now())
-
-  @@index([createdAt])
-}
-
-// Enums
-
-enum Role {
-  USER
-  ADMIN
-}
-
-// Status
-enum Status {
-  LOCKED
-  AVAILABLE 
-  PENDING
-  FEEDBACK 
-  APPROVED
 }
