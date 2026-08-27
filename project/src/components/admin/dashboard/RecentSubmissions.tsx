@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
@@ -14,9 +17,38 @@ interface RecentSubmissionsProps {
 }
 
 export default function RecentSubmissions({
-  submissions,
-  loading,
+  submissions: initialSubmissions,
+  loading: initialLoading,
 }: RecentSubmissionsProps) {
+  const [submissions, setSubmissions] = useState<Submission[]>(initialSubmissions);
+  const [loading, setLoading] = useState(initialLoading);
+
+  useEffect(() => {
+    const fetchRecentSubmissions = async () => {
+      try {
+        const response = await fetch("/api/admin/submissions?status=PENDING", {
+          credentials: "include",
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setSubmissions(data);
+        }
+      } catch (error) {
+        console.error("Error polling recent submissions:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Poll every 10 seconds to keep the dashboard live
+    const interval = setInterval(fetchRecentSubmissions, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Sync state if initial prop changes (e.g. on server-side revalidation)
+  useEffect(() => {
+    setSubmissions(initialSubmissions);
+  }, [initialSubmissions]);
   return (
     <div>
       <h2 className="text-xl font-semibold text-[#111827] mb-6">

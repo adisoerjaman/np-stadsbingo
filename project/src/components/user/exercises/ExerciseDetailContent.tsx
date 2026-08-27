@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import ImageModal from "@/components/shared/ImageModal";
 import LocationMap from "@/components/shared/LocationMap";
 import {
@@ -554,8 +554,6 @@ export default function ExerciseDetailContent({
           onClose={handleCloseModal}
         />
       )}
-
-      <Toaster />
     </main>
   );
 }

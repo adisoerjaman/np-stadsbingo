@@ -6,7 +6,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import PageHeader from "@/components/admin/ui/PageHeader";
 import SubmissionsList from "@/components/admin/submissions/SubmissionsList";
 import FeedbackModal from "@/components/admin/submissions/FeedbackModal";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 interface Submission {
   id: string;
@@ -162,8 +162,6 @@ export default function SubmissionsReview() {
           onClose={handleCloseFeedbackModal}
         />
       </div>
-
-      <Toaster />
     </AdminLayout>
   );
 }
